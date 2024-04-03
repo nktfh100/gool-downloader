@@ -18,7 +18,7 @@ ffdl install
 ## Usage
 
 ```bash
-usage: python main.py [-h] [--free] [--timeout TIMEOUT]
+python main.py [-h] [--free] [--timeout TIMEOUT]
 ```
 
 How to use the script:
