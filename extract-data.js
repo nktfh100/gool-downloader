@@ -1,29 +1,29 @@
-function timeToSeconds(timeString) {
-	let parts = timeString.split(":");
-	let hours = parseInt(parts[0], 10);
-	let minutes = parseInt(parts[1], 10);
-	let seconds = parseInt(parts[2], 10);
-	return hours * 3600 + minutes * 60 + seconds;
-}
+const isBagrut = window.location.href.toLowerCase().includes("bagrut");
 
 let parentContainer = document.querySelector(
-	".scrollobar_content.mCustomScrollbar"
+	isBagrut
+		? ".scrollobar_content.mCustomScrollbar"
+		: ".topics-list.list-unstyled.list-el-video"
 );
 
-let targetedNumbersBoxes = parentContainer.querySelectorAll(
-	".targeted_numbers_box"
-);
+let subjectsListContainer = isBagrut
+	? parentContainer.querySelectorAll(".targeted_numbers_box")
+	: Array.from(parentContainer.children).filter(
+			(element) => element.tagName === "LI"
+	  );
 
 let allExtractedData = [];
 
-targetedNumbersBoxes.forEach(function (targetedNumbersBox) {
-	const title = targetedNumbersBox
-		.querySelector(".targeted_number_title h2")
-		.innerText.trim();
+subjectsListContainer.forEach(function (subjectContainer) {
+	const title = isBagrut
+		? subjectContainer
+				.querySelector(".targeted_number_title h2")
+				.innerText.trim()
+		: subjectContainer.querySelector("u").innerText.trim();
 
-	const items = targetedNumbersBox.querySelectorAll(
-		".targeted_number_check_box li"
-	);
+	const items = isBagrut
+		? subjectContainer.querySelectorAll(".targeted_number_check_box li")
+		: subjectContainer.querySelectorAll("li");
 
 	let extractedData = [];
 
@@ -32,8 +32,9 @@ targetedNumbersBoxes.forEach(function (targetedNumbersBox) {
 	items.forEach(function (item) {
 		topicId = item.getAttribute("data-topic-id");
 		const videoId = item.getAttribute("data-video-id");
-		const title = item.querySelector("span").innerText.trim();
-		const videoLength = item.querySelector(".date_time").innerText.trim();
+		const title = isBagrut
+			? item.querySelector("span").innerText.trim()
+			: item.innerText.trim();
 
 		if (!videoId) {
 			return;
@@ -42,7 +43,6 @@ targetedNumbersBoxes.forEach(function (targetedNumbersBox) {
 		extractedData.push({
 			title: title,
 			videoId: videoId,
-			videoLengthSeconds: timeToSeconds(videoLength),
 		});
 	});
 
